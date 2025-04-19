@@ -1,10 +1,3 @@
-import { Router } from 'express';
+import userRouter from './user.router';
 
-const router = Router();
-
-// Endpoint de ejemplo
-router.get('/', (req, res) => {
-  res.json({ message: 'Listado de usuarios' });
-});
-
-export default router;
+export default userRouter;
