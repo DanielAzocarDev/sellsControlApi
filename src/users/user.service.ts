@@ -1,6 +1,7 @@
 import { PrismaClient } from '../generated/prisma';
 import { isValidEmail } from '../utils/isValidEmail';
 import { isPasswordValid } from './helpers/isPasswordValid';
+import { ValidationError } from '../errors';
 
 const prisma = new PrismaClient();
 
@@ -25,7 +26,7 @@ const register = async (data: Omit<User, 'id'>) => {
   const missingFields = requiredFields.filter(field => !data[field]);
 
   if (missingFields.length > 0) {
-    throw new Error(`Los siguientes campos son obligatorios: ${missingFields.join(', ')}`);
+    throw new ValidationError(`Los siguientes campos son obligatorios: ${missingFields.join(', ')}`);
   }
 
   // Validate email existence only if provided
@@ -35,11 +36,11 @@ const register = async (data: Omit<User, 'id'>) => {
         where: { email },
       });
       if (existingUserByEmail) {
-        throw new Error('El email ya está registrado');
+        throw new ValidationError('El email ya está registrado');
       }
       // Validate email format
       if (!isValidEmail(email)) {
-        throw new Error('El email no es válido');
+        throw new ValidationError('El email no es válido');
       }
   }
 
@@ -48,15 +49,15 @@ const register = async (data: Omit<User, 'id'>) => {
     where: { username },
   });
   if (existingUserByUsername) {
-    throw new Error('El username ya está registrado');
+    throw new ValidationError('El username ya está registrado');
   }
 
 
   if(!password) {
-    throw new Error('La contraseña es obligatoria');
+    throw new ValidationError('La contraseña es obligatoria');
   }
   if (!isPasswordValid(password)) {
-    throw new Error('La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número');
+    throw new ValidationError('La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número');
   }
 
   const user = await prisma.user.create({
