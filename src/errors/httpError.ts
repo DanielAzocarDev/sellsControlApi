@@ -5,25 +5,24 @@ export class HttpError extends Error {
     super(message);
     this.statusCode = statusCode;
     this.name = this.constructor.name; // Set the error name to the class name
-    Error.captureStackTrace(this, this.constructor); // Capture stack trace
+  }
+}
+
+export class ValidationError extends HttpError {
+  constructor(message: string) {
+    super(message, 400); // Bad Request
+  }
+}
+
+export class AuthenticationError extends HttpError {
+  constructor(message: string) {
+    super(message, 401); // Unauthorized
   }
 }
 
 export class NotFoundError extends HttpError {
   constructor(message: string = 'Resource not found') {
     super(message, 404);
-  }
-}
-
-export class ValidationError extends HttpError {
-  constructor(message: string = 'Validation failed') {
-    super(message, 400);
-  }
-}
-
-export class AuthenticationError extends HttpError {
-  constructor(message: string = 'Authentication failed') {
-    super(message, 401);
   }
 }
 
