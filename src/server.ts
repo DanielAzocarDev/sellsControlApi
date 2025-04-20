@@ -10,9 +10,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.use('/users', usersRouter);
-app.use('/products', productsRouter);
-app.use('/sales', salesRouter);
+app.use('/api/auth/users', usersRouter);
+app.use('/api/products', productsRouter);
+app.use('/api/sales', salesRouter);
 
 app.get('/', (req, res) => {
   res.send('API de Control de Ventas funcionando');
