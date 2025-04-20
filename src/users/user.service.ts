@@ -1,10 +1,10 @@
-import { PrismaClient } from '../generated/prisma';
+
 import { isValidEmail } from '../utils/isValidEmail';
 import { isPasswordValid } from './helpers/isPasswordValid';
 import { ValidationError, AuthenticationError } from '../errors';
 import bcrypt from 'bcrypt';
+import { prisma } from '../db';
 
-const prisma = new PrismaClient();
 const saltRounds = 10; // Cost factor for hashing
 
 type User = {
