@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "prisma:generate": "prisma generate",
-    "build": "prisma generate && tsc",
+    "prisma:migrate-deploy": "prisma migrate deploy",
+    "prisma:migrate:reset": "prisma migrate reset",
+    "build": "prisma migrate deploy && prisma generate && tsc",
     "start": "node dist/server.js",
     "dev": "ts-node-dev src/server.ts"
   },
