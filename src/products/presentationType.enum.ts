@@ -1,0 +1,7 @@
+export enum PresentationTypeEnum {
+  UNIT = 'UNIT',
+  HALF_DOZEN = 'HALF_DOZEN',
+  DOZEN = 'DOZEN',
+  TWENTY_FOUR_UNITS = 'TWENTY_FOUR_UNITS',
+  THIRTY_SIX_UNITS = 'THIRTY_SIX_UNITS',
+}

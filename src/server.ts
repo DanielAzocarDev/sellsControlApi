@@ -2,8 +2,7 @@ import express, { ErrorRequestHandler } from 'express'; // Importar ErrorRequest
 import usersRouter from './users';
 import productsRouter from './products';
 import salesRouter from './sales';
-import { errorHandler } from './middlewares/errorHandler'; // Importar el manejador de errores
-import { authMiddleware } from './middlewares/authMiddleware';
+import { errorHandler } from './middlewares/errorHandler'; 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
