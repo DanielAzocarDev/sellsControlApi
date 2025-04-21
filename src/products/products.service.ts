@@ -54,4 +54,17 @@ const create = async (payload: IProduct, userId: string) => {
   }
 }
 
-export default { create}
+const products = async (id: string) => {
+  const product = await prisma.product.findMany({
+    where: {
+      userId: id
+    }
+  })
+
+  return {
+    product,
+    message: `Productos del usuario ${id}`
+  }
+}
+
+export default { create, products}
