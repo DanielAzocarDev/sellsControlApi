@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/authMiddleware";
 import productService from "./products.service";
-import { ValidationError } from "../errors";
+import { NotFoundError, ValidationError } from "../errors";
 
 
 const createProduct = async (req: AuthRequest, res: Response) => {
@@ -45,7 +45,31 @@ const getProducts = async (req: AuthRequest, res: Response) => {
   }
 }
 
+const updateProduct = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const { productId } = req.params;
+  const payload = req.body;
+  if (!userId) {
+    res.status(401).json({ error: 'Usuario no autenticado' });
+    return;
+  }
+  try {
+    const product = await productService.update(userId, productId, payload);
+    res.status(200).json(product);
+  } catch (error: any) {
+    if (error instanceof ValidationError) {
+      res.status(400).json({ error: error.message });
+    } else if (error instanceof NotFoundError) {
+      res.status(404).json({ error: error.message });
+    } else {
+      console.error('Error al actualizar el producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+}
+
 export default {
   createProduct,
   getProducts,
+  updateProduct,
 }
