@@ -1,5 +1,5 @@
 import { prisma } from "../db"
-import { ValidationError } from "../errors"
+import { NotFoundError, ValidationError } from "../errors"
 import { IProduct } from "../interface/IProduct"
 
 
@@ -54,4 +54,43 @@ const create = async (payload: IProduct, userId: string) => {
   }
 }
 
-export default { create}
+const products = async (userId: string) => {
+  const product = await prisma.product.findMany({
+    where: {
+      userId
+    }
+  })
+
+  return {
+    product,
+    message: `Productos del usuario ${userId}`
+  }
+}
+
+const update = async (userId: string, productId: string , payload: Partial<IProduct>) => {
+
+  if(!userId) {
+    throw new ValidationError('El usuario no está autenticado');
+  }
+
+  if(!productId) {
+    throw new NotFoundError('El producto no existe');
+  }
+  
+  const product = await prisma.product.update({
+    where: {
+      id: productId,
+      userId,
+    },
+    data: {
+      ...payload,
+    },
+  })
+
+  return {
+    product,
+    message: 'Producto actualizado correctamente'
+  }
+}
+
+export default { create, products, update}
