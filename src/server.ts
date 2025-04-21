@@ -1,6 +1,6 @@
 import express, { ErrorRequestHandler } from 'express'; // Importar ErrorRequestHandler
 import usersRouter from './users';
-import productsRouter from './products';
+import productsRouter from './products/products.router';
 import salesRouter from './sales';
 import { errorHandler } from './middlewares/errorHandler'; // Importar el manejador de errores
 import { authMiddleware } from './middlewares/authMiddleware';

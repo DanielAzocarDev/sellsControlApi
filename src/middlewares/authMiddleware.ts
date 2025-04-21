@@ -1,7 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+export interface AuthRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+  }}
+
+export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Token no proporcionado' });
@@ -11,9 +17,13 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   try {
     const payload = verifyToken(token);
     // Puedes adjuntar el payload al request para usarlo en los controladores
-    (req as any).user = payload;
+    req.user = {
+      id: payload.userId,
+      email: payload.email,
+    };
     next();
   } catch (error) {
     res.status(401).json({ error: 'Token inválido o expirado' });
+    return;
   }
 }

@@ -14,13 +14,29 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  name     String
-  email    String @unique
-  password String
-  phone    String
-  address  String
-  country  String
-  zipcode  String
+  id        String    @id @default(uuid())
+  username  String    @unique
+  name      String
+  email     String    @unique
+  password  String
+  phone     String
+  address   String
+  country   String
+  zipcode   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  cost        Float
+  stock       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
 }
