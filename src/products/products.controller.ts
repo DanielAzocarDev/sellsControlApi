@@ -68,8 +68,31 @@ const updateProduct = async (req: AuthRequest, res: Response) => {
   }
 }
 
+const softDeleteProduct = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const { productId } = req.params;
+  if (!userId) {
+    res.status(401).json({ error: 'Usuario no autenticado' });
+    return;
+  }
+  try {
+    const product = await productService.softDelete(userId, productId);
+    res.status(200).json(product);
+  }catch (error: any) {
+    if (error instanceof ValidationError) {
+      res.status(400).json({ error: error.message });
+    } else if (error instanceof NotFoundError) {
+      res.status(404).json({ error: error.message });
+    } else {
+      console.error('Error al eliminar el producto:', error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  }
+}
+
 export default {
   createProduct,
   getProducts,
   updateProduct,
+  softDeleteProduct
 }
