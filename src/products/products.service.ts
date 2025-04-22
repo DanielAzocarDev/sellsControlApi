@@ -93,4 +93,27 @@ const update = async (userId: string, productId: string , payload: Partial<IProd
   }
 }
 
-export default { create, products, update}
+const softDelete = async (userId: string, productId: string) => {
+  if(!userId) {
+    throw new ValidationError('El usuario no está autenticado');
+  }
+  if(!productId) {
+    throw new NotFoundError('El producto no existe');
+  }
+  const product = await prisma.product.update({
+    where: {
+      id: productId,
+      userId,
+    },
+    data: {
+      deleted: true,
+      deletedAt: new Date(),
+    },
+  })
+  return {
+    product,
+    message: 'Producto eliminado correctamente'
+  }
+}
+
+export default { create, products, update, softDelete}
